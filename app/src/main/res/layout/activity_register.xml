@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Let's Know You !"
+                android:text="@string/let_s_know_you"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please fill aLl the detatil"
+                android:text="@string/please_fill_all_the_detatil"
                 android:textColor="@color/white"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_8sdp"
@@ -69,7 +69,7 @@
                     android:id="@+id/tvUploadImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Image"
+                    android:text="@string/upload_image"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/black"
                     />
@@ -83,10 +83,9 @@
                         android:id="@+id/userName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Name
-"
+                        android:hint="@string/name"
                         android:inputType="text"
-                        android:drawableLeft="@drawable/profile"
+                        android:drawableStart="@drawable/profile"
                         android:drawablePadding="@dimen/_7sdp"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -116,9 +115,9 @@
                         android:id="@+id/userCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="City"
+                        android:hint="@string/city"
                         android:inputType="text"
-                        android:drawableLeft="@drawable/ic_baseline_location_on_24"
+                        android:drawableStart="@drawable/ic_baseline_location_on_24"
                         android:drawablePadding="@dimen/_7sdp"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -131,14 +130,14 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_7ssp"
                     android:layout_gravity="center_horizontal"
-                    android:text="By clicking it you are accepting our term and condition"
+                    android:text="@string/by_clicking_it_you_are_accepting_our_term_and_condition"
                     />
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSaveData"
+                    android:id="@+id/btnContinue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Continue"
+                    android:text="@string/continue."
                     android:textAllCaps="false"
                     app:cornerRadius="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -147,13 +146,7 @@
 
             </LinearLayout>
 
-            <!--        <ProgressBar-->
-            <!--            android:id="@+id/progressBarNumber"-->
-            <!--            android:layout_marginBottom="@dimen/_11sdp"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_gravity="center"-->
-            <!--            />-->
+
 
         </com.google.android.material.card.MaterialCardView>
 

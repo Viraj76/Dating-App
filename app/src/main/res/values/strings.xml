@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Dating App</string>
+    <string name="let_s_know_you">Let\'s Know You !</string>
+    <string name="please_fill_all_the_detatil">Please fill aLl the detatil</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="name">Name</string>
+    <string name="city">City</string>
+    <string name="by_clicking_it_you_are_accepting_our_term_and_condition">By clicking it you are accepting our term and condition</string>
+    <string name="continue.">Continue</string>
 </resources>
