@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.datingapp.MainActivity
 import com.example.datingapp.R
 import com.example.datingapp.databinding.ActivityLoginBinding
@@ -15,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.concurrent.TimeUnit
 
@@ -23,14 +28,17 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var verificationId: String? = null
+    private lateinit var progressDialog:AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        progressBarNumber.visibility = GONE
-        binding.apply {
+//        progressBarNumber.visibility = GONE
 
+        progressDialog = AlertDialog.Builder(this).setView(R.layout.progress_dialog).setCancelable(false).create()
+
+        binding.apply {
             btnSendOtp.setOnClickListener {
                 if (binding.userNumber.text!!.isEmpty())
                     binding.userNumber.error = "Please Enter Your Number"
@@ -51,19 +59,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun verifyOTP(userOtp: String) {
-        progressBarNumber.visibility = VISIBLE
+//        progressBarNumber.visibility = VISIBLE
+        progressDialog.show()
         val credential = PhoneAuthProvider.getCredential(verificationId!!, userOtp)
         signInWithPhoneAuthCredential(credential)
     }
 
 
     private fun sendOTP(userNumber: String) {
-        progressBarNumber.visibility = VISIBLE
-        
+//        progressBarNumber.visibility = VISIBLE
+        progressDialog.show()
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                progressBarNumber.visibility = VISIBLE
+//                progressBarNumber.visibility = VISIBLE
                 signInWithPhoneAuthCredential(credential)
             }
             
@@ -75,10 +84,11 @@ class LoginActivity : AppCompatActivity() {
                 token: PhoneAuthProvider.ForceResendingToken
             ) {
                 this@LoginActivity.verificationId = verificationId
-                progressBarNumber.visibility = GONE
+//                progressBarNumber.visibility = GONE
+                progressDialog.dismiss()
                 binding.cvNumberLayout.visibility = GONE
                 binding.cvOtpLayout.visibility = VISIBLE
-                progressBarNumber.visibility = GONE
+//                progressBarNumber.visibility = GONE
             }
         }
         
@@ -95,12 +105,13 @@ class LoginActivity : AppCompatActivity() {
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
-                progressBarNumber.visibility = VISIBLE
+//                progressBarNumber.visibility = VISIBLE
                 if (task.isSuccessful) {
-                    progressBarNumber.visibility = VISIBLE
+//                    progressBarNumber.visibility = VISIBLE
                     checkUser(binding.userNumber.text.toString())
 
                 } else {
+                    progressDialog.dismiss()
                     Toast.makeText(this,task.exception.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
@@ -108,6 +119,28 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkUser(userNumber: String) {
 
+        FirebaseDatabase.getInstance().getReference("Users").child(userNumber)
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        progressDialog.dismiss()
+                        startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+                        finish()
+                    }
+                    else{
+                        progressDialog.dismiss()
+                        startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
+                        finish()
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    progressDialog.dismiss()
+                    Toast.makeText(this@LoginActivity,error.message, Toast.LENGTH_SHORT).show()
+                }
+
+            })
     }
 
 
