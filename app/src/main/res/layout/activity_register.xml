@@ -1,9 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".auth.RegisterActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp"
+            android:background="@color/hardBlue"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Let's Know You !"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:textSize="@dimen/_18ssp"
+                android:letterSpacing="0.01"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please fill aLl the detatil"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:textSize="@dimen/_15ssp"
+                android:letterSpacing="0.01"/>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvNumberLayout"
+            android:layout_width="@dimen/_260sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/illus"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-120dp"
+            app:cardCornerRadius="@dimen/_15sdp"
+            app:strokeColor="@color/hardBlue"
+            app:strokeWidth="@dimen/_2sdp"
+
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/_16sdp"
+                >
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivUserImage"
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_90sdp"
+                    android:src="@color/hardBlue"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <TextView
+                    android:id="@+id/tvUploadImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Image"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Name
+"
+                        android:inputType="text"
+                        android:drawableLeft="@drawable/profile"
+                        android:drawablePadding="@dimen/_7sdp"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress"
+                        android:drawableLeft="@drawable/ic_baseline_email_24"
+                        android:drawablePadding="@dimen/_7sdp"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/userCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="City"
+                        android:inputType="text"
+                        android:drawableLeft="@drawable/ic_baseline_location_on_24"
+                        android:drawablePadding="@dimen/_7sdp"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <CheckBox
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:id="@+id/checkBoxTermCondition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_7ssp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="By clicking it you are accepting our term and condition"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Continue"
+                    android:textAllCaps="false"
+                    app:cornerRadius="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    >
+                </com.google.android.material.button.MaterialButton>
+
+            </LinearLayout>
+
+            <!--        <ProgressBar-->
+            <!--            android:id="@+id/progressBarNumber"-->
+            <!--            android:layout_marginBottom="@dimen/_11sdp"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_gravity="center"-->
+            <!--            />-->
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -77,13 +77,13 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBarNumber"
-            android:layout_marginBottom="@dimen/_11sdp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+<!--        <ProgressBar-->
+<!--            android:id="@+id/progressBarNumber"-->
+<!--            android:layout_marginBottom="@dimen/_11sdp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            />-->
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -143,12 +143,12 @@
             </com.google.android.material.button.MaterialButton>
         </LinearLayout>
 
-        <ProgressBar
-            android:layout_marginBottom="@dimen/_11sdp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+<!--        <ProgressBar-->
+<!--            android:layout_marginBottom="@dimen/_11sdp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            />-->
 
     </com.google.android.material.card.MaterialCardView>
 
