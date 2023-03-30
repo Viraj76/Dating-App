@@ -6,17 +6,17 @@
     app:startDestination="@id/datingFragment">
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.datingapp.ui.ProfileFragment"
+        android:name="com.example.datingapp.ui.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.datingapp.ui.ChatFragment"
+        android:name="com.example.datingapp.ui.fragments.ChatFragment"
         android:label="fragment_chatragment"
         tools:layout="@layout/fragment_chatragment" />
     <fragment
         android:id="@+id/datingFragment"
-        android:name="com.example.datingapp.ui.DatingFragment"
+        android:name="com.example.datingapp.ui.fragments.DatingFragment"
         android:label="fragment_dating"
         tools:layout="@layout/fragment_dating" />
 </navigation>

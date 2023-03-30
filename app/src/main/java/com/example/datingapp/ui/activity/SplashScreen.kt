@@ -1,4 +1,4 @@
-package com.example.datingapp.activity
+package com.example.datingapp.ui.activity
 
 import android.content.Intent
 import android.os.Build
@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.WindowInsets
-import android.view.WindowManager
-import com.example.datingapp.MainActivity
 import com.example.datingapp.R
 import com.example.datingapp.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +24,7 @@ class SplashScreen : AppCompatActivity() {
             if(currentUser == null)
                 startActivity(Intent(this,LoginActivity::class.java))
             else
-                startActivity(Intent(this,MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             finish()
         },2000)
     }

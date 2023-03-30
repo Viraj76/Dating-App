@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.datingapp.MainActivity
-import com.example.datingapp.databinding.ActivityLoginBinding
+import com.example.datingapp.ui.activity.MainActivity
 import com.example.datingapp.databinding.ActivityRegisterBinding
 import com.example.datingapp.model.UserModel
 import com.example.datingapp.utils.Config
@@ -94,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
             .setValue(userData)
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    startActivity(Intent(this,MainActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     Toast.makeText(this,"Successfully registered",Toast.LENGTH_SHORT).show()
                 }
                 else

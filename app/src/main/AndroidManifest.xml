@@ -13,12 +13,18 @@
         android:theme="@style/Theme.DatingApp"
         tools:targetApi="31">
         <activity
-            android:name=".activity.SplashScreen"
+            android:name=".ui.activity.MessageActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.activity.SplashScreen"
             android:exported="true"
-            android:theme="@style/NoActionBarTheme"
             android:screenOrientation="fullSensor"
-            android:windowSoftInputMode="adjustResize"
-            >
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,16 +35,13 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".auth.RegisterActivity"
             android:exported="false">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".auth.LoginActivity"
             android:exported="false">
@@ -47,7 +50,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

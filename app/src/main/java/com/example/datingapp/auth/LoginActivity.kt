@@ -3,12 +3,11 @@ package com.example.datingapp.auth
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.datingapp.MainActivity
+import com.example.datingapp.ui.activity.MainActivity
 import com.example.datingapp.R
 import com.example.datingapp.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseException
@@ -20,7 +19,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_login.*
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -119,12 +117,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkUser(userNumber: String) {
 
-        FirebaseDatabase.getInstance().getReference("Users").child(userNumber)
+        FirebaseDatabase.getInstance().getReference("Users").child("+91$userNumber")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){
                         progressDialog.dismiss()
-                        startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     }
                     else{
