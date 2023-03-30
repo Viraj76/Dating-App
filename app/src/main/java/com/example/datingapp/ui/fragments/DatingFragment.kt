@@ -52,7 +52,7 @@ class DatingFragment : Fragment() {
                             userDetail.add(userData!!)
 
                     }
-                  
+
                     datingAdapter.setUserDetail(userDetail)
                 }
 
