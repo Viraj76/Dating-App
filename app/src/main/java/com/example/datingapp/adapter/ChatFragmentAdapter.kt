@@ -1,20 +1,31 @@
 package com.example.datingapp.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.datingapp.databinding.ChatItemViewBinding
 import com.example.datingapp.model.UserModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-class ChatFragmentAdapter:RecyclerView.Adapter<ChatFragmentAdapter.ChatViewHolder>() {
+class ChatFragmentAdapter(val context: Context):RecyclerView.Adapter<ChatFragmentAdapter.ChatViewHolder>() {
 
-   private var userList = ArrayList<UserModel>()
+    private var listOfReceiverNumber = ArrayList<String>()
+    private var listOfChatsWithinTheCharId = ArrayList<String>()
 
-    fun setUserList(userList:ArrayList<UserModel>){
-        this.userList = userList
+    fun setUserList(userList: ArrayList<String>){
+        this.listOfReceiverNumber = userList
+        notifyDataSetChanged()
+    }
+
+    fun setChats(listOfChatsWithinTheCharId : ArrayList<String>){
+        this.listOfChatsWithinTheCharId = listOfChatsWithinTheCharId
         notifyDataSetChanged()
     }
 
@@ -25,15 +36,32 @@ class ChatFragmentAdapter:RecyclerView.Adapter<ChatFragmentAdapter.ChatViewHolde
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-       val userData  = userList[position]
-        holder.binding.apply {
-            Glide.with(holder.itemView).load(userData.image).into(userImage)
-            userName.text = userData.name
-        }
+       val receiverNumber  = listOfReceiverNumber[position]
+
+        FirebaseDatabase.getInstance().getReference("Users").child(receiverNumber)
+            .addListenerForSingleValueEvent(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val receiverData = snapshot.getValue(UserModel::class.java)
+                        holder.binding.apply {
+                            Glide.with(holder.itemView).load(receiverData!!.image).into(userImage)
+                            userName.text = receiverData.name
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                   Toast.makeText(context,error.message.toString(),Toast.LENGTH_SHORT).show()
+                }
+
+            })
+
+
+
     }
 
     override fun getItemCount(): Int {
-       return userList.size
+       return listOfReceiverNumber.size
     }
 
 

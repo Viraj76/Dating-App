@@ -94,6 +94,7 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                     Toast.makeText(this,"Successfully registered",Toast.LENGTH_SHORT).show()
                 }
                 else
