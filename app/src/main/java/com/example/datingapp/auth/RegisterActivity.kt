@@ -81,10 +81,12 @@ class RegisterActivity : AppCompatActivity() {
     private fun storeData(imageUrl: Uri?) {
 
         val userData = UserModel(
+            
             name = binding.userName.text.toString(),
             email =  binding.userEmail.text.toString(),
             city = binding.userCity.text.toString(),
-            image = imageUrl.toString()
+            image = imageUrl.toString(),
+            number = FirebaseAuth.getInstance().currentUser?.phoneNumber
         )
 
         FirebaseDatabase.getInstance().getReference("Users")

@@ -12,4 +12,7 @@
     <string name="dating">Dating</string>
     <string name="chat">Chat</string>
     <string name="profile">Profile</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="cardview">CardView</string>
 </resources>
