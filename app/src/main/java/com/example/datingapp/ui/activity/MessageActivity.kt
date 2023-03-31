@@ -74,7 +74,7 @@ class MessageActivity : AppCompatActivity() {
     }
 
     private fun prepareRvForMessageAdapter() {
-        messageAdapter = MessageAdapter(this)
+        messageAdapter = MessageAdapter(binding.rvChats,this)
         binding.rvChats.apply {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
             adapter  = messageAdapter

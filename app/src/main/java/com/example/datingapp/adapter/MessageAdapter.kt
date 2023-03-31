@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class MessageAdapter(val context:Context):RecyclerView.Adapter<ViewHolder>() {
+class MessageAdapter(val recyclerView: RecyclerView,val context:Context):RecyclerView.Adapter<ViewHolder>() {
 
     private var messageList = ArrayList<Messages>()
     var ITEM_SENT = 1
@@ -28,6 +28,9 @@ class MessageAdapter(val context:Context):RecyclerView.Adapter<ViewHolder>() {
     fun setMessageList(messageList: ArrayList<Messages>){
         this.messageList = messageList
         notifyDataSetChanged()
+        recyclerView.post{
+            recyclerView.smoothScrollToPosition(itemCount - 1)
+        }
     }
 
 class SentViewHolder(val binding:SendMessageBinding):ViewHolder(binding.root)
