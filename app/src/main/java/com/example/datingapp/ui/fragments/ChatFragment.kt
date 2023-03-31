@@ -36,12 +36,15 @@ class ChatFragment : Fragment() {
 
     private fun getUsersWithWhomChatted() {
         Config.showDialog(requireContext())
-        val listOfReceiverNumber = ArrayList<String>()
-        val listOfChatsWithinTheCharId = ArrayList<String>()
+
         val currentUserId = FirebaseAuth.getInstance().currentUser?.phoneNumber
         FirebaseDatabase.getInstance().getReference("Chats")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val listOfReceiverNumber = ArrayList<String>()      //this should be inside the on data  otherwise every time , already added user will
+                    val listOfChatsWithinTheCharId = ArrayList<String>() //be also in the list
+
                    for(charIds in snapshot.children){
                        if(charIds.key!!.contains(currentUserId!!)){
                            listOfReceiverNumber.add(charIds.key!!.replace(currentUserId,""))

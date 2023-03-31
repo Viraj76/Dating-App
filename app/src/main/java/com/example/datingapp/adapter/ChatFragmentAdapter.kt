@@ -1,6 +1,7 @@
 package com.example.datingapp.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.datingapp.databinding.ChatItemViewBinding
 import com.example.datingapp.model.UserModel
+import com.example.datingapp.ui.activity.MessageActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -35,12 +37,14 @@ class ChatFragmentAdapter(val context: Context):RecyclerView.Adapter<ChatFragmen
         return ChatViewHolder(ChatItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-       val receiverNumber  = listOfReceiverNumber[position]
 
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
+
+       val receiverNumber  = listOfReceiverNumber[position]
         FirebaseDatabase.getInstance().getReference("Users").child(receiverNumber)
             .addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
+
                     if(snapshot.exists()){
                         val receiverData = snapshot.getValue(UserModel::class.java)
                         holder.binding.apply {
@@ -49,15 +53,18 @@ class ChatFragmentAdapter(val context: Context):RecyclerView.Adapter<ChatFragmen
                         }
                     }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                   Toast.makeText(context,error.message.toString(),Toast.LENGTH_SHORT).show()
+                   Toast.makeText(context,error.message,Toast.LENGTH_SHORT).show()
                 }
 
             })
 
-
-
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context,MessageActivity::class.java)
+            intent.putExtra("chatId",listOfChatsWithinTheCharId[position])
+            intent.putExtra("userId",listOfReceiverNumber[position])
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
