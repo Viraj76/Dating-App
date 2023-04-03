@@ -49,7 +49,6 @@ class MessageActivity : AppCompatActivity() {
     private var chatId:String?= null
 
     private fun verifyChatId() {
-
         val receiverId = intent.getStringExtra("userId")
          senderId  = FirebaseAuth.getInstance().currentUser?.phoneNumber
          chatId = senderId + receiverId
@@ -81,13 +80,13 @@ class MessageActivity : AppCompatActivity() {
         }
     }
 
-    val messagesList = ArrayList<Messages>()
+
 
     private fun getMessages(chatId: String?) {
         FirebaseDatabase.getInstance().getReference("Chats").child(chatId!!)
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    messagesList.clear()
+                    val messagesList = ArrayList<Messages>()
                     for(messages in snapshot.children){
                         val message = messages.getValue(Messages::class.java)
                         messagesList.add(message!!)
@@ -101,34 +100,9 @@ class MessageActivity : AppCompatActivity() {
             })
     }
 
-//    private fun sendMessage(message: String) {
-//
-//
-//        val reference=FirebaseDatabase.getInstance().getReference("Chats")
-//        reference.addListenerForSingleValueEvent(object : ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//             if(snapshot.hasChild(reverseChatId)){
-//                 storeMessage(receiverId!!,message,senderId)
-//             }
-//                else{
-//                 storeMessage(chatId,message,senderId )
-//             }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Toast.makeText(this@MessageActivity,error.message,Toast.LENGTH_SHORT).show()
-//            }
-//
-//        })
-//
-//
-//    }
-
     private fun storeMessage(message: String) {
-
         val currentDate: String = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         val currentTime: String = SimpleDateFormat("HH:mm a", Locale.getDefault()).format(Date())
-
         val map = hashMapOf<String,String>()
         map["message"] = message
         map["senderId"] = senderId!!
@@ -141,9 +115,6 @@ class MessageActivity : AppCompatActivity() {
                     Toast.makeText(this,"Message Sent",Toast.LENGTH_SHORT).show()
                 }
             }
-
-        verifyChatId()
-
 
     }
 }

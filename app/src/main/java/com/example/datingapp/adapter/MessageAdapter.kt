@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class MessageAdapter(val recyclerView: RecyclerView,val context:Context):RecyclerView.Adapter<ViewHolder>() {
+class MessageAdapter(private val recyclerView: RecyclerView, val context:Context):RecyclerView.Adapter<ViewHolder>() {
 
     private var messageList = ArrayList<Messages>()
     var ITEM_SENT = 1
@@ -61,7 +61,7 @@ class ReceivedViewHolder(val binding:ReceiveMessageBinding):ViewHolder(binding.r
                         }
                     }
                     override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(context,error.message.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,error.message, Toast.LENGTH_SHORT).show()
                     }
                 })
         }

@@ -35,6 +35,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun getUsersWithWhomChatted() {
+
         Config.showDialog(requireContext())
 
         val currentUserId = FirebaseAuth.getInstance().currentUser?.phoneNumber
