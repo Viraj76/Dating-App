@@ -117,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkUser(userNumber: String) {
 
-        FirebaseDatabase.getInstance().getReference("Users").child("+91$userNumber")
+        FirebaseDatabase.getInstance().getReference("Users").child( "+91$userNumber")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){

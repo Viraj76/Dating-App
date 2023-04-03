@@ -10,6 +10,7 @@ data class UserModel(
     val city: String? =null,
     val gender: String ?=null,
     val relationship: String ?=null,
+    val fcmToken: String ?=null,
     val star: String ?=null,
     val image: String ?=null,
     val age: String ?=null,

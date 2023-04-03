@@ -114,6 +114,9 @@ class MessageActivity : AppCompatActivity() {
                 if(messageSent.isSuccessful) {
                     Toast.makeText(this,"Message Sent",Toast.LENGTH_SHORT).show()
                 }
+                else{
+                    Toast.makeText(this,messageSent.exception.toString(),Toast.LENGTH_SHORT).show()
+                }
             }
 
     }

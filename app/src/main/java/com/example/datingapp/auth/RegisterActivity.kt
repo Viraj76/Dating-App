@@ -10,8 +10,10 @@ import com.example.datingapp.ui.activity.MainActivity
 import com.example.datingapp.databinding.ActivityRegisterBinding
 import com.example.datingapp.model.UserModel
 import com.example.datingapp.utils.Config
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 
 class RegisterActivity : AppCompatActivity() {
@@ -79,29 +81,40 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun storeData(imageUrl: Uri?) {
 
-        val userData = UserModel(
-            
-            name = binding.userName.text.toString(),
-            email =  binding.userEmail.text.toString(),
-            city = binding.userCity.text.toString(),
-            image = imageUrl.toString(),
-            number = FirebaseAuth.getInstance().currentUser?.phoneNumber
-        )
 
-        FirebaseDatabase.getInstance().getReference("Users")
-            .child(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!)
-            .setValue(userData)
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                    Toast.makeText(this,"Successfully registered",Toast.LENGTH_SHORT).show()
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->     //first generating the token and store it to the respective user database
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            // Get new FCM registration token
+           val  token = task.result
+
+            val userData = UserModel(
+                name = binding.userName.text.toString(),
+                email =  binding.userEmail.text.toString(),
+                city = binding.userCity.text.toString(),
+                image = imageUrl.toString(),
+                number = FirebaseAuth.getInstance().currentUser?.phoneNumber,
+                fcmToken =  token
+            )
+
+            FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!)
+                .setValue(userData)
+                .addOnCompleteListener {
+                    if(it.isSuccessful){
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                        Toast.makeText(this,"Successfully registered",Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                        Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
                 }
-                else
-                    Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener{
-                Toast.makeText(this,it.message.toString(),Toast.LENGTH_SHORT).show()
-            }
+                .addOnFailureListener{
+                    Toast.makeText(this,it.message.toString(),Toast.LENGTH_SHORT).show()
+                }
+        })
+
+
     }
 }
