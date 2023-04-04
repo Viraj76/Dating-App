@@ -1,3 +1,7 @@
 package com.example.datingapp.notification
 
-data class PushNotificaition()
+data class PushNotification(
+
+    val data : NotificationData,
+    val to : String
+)
