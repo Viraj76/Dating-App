@@ -1,18 +1,25 @@
 package com.example.datingapp.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.datingapp.adapter.MessageAdapter
 import com.example.datingapp.databinding.ActivityMessageBinding
 import com.example.datingapp.model.Messages
+import com.example.datingapp.model.UserModel
+import com.example.datingapp.notification.NotificationData
+import com.example.datingapp.notification.PushNotification
+import com.example.datingapp.notification.api.ApiUtilities
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_message.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,9 +54,10 @@ class MessageActivity : AppCompatActivity() {
 
     private var senderId:String?= null
     private var chatId:String?= null
+    private var receiverId: String? = null
 
     private fun verifyChatId() {
-        val receiverId = intent.getStringExtra("userId")
+        receiverId = intent.getStringExtra("userId")
          senderId  = FirebaseAuth.getInstance().currentUser?.phoneNumber
          chatId = senderId + receiverId
         val reverseChatId =  receiverId + senderId
@@ -111,6 +119,10 @@ class MessageActivity : AppCompatActivity() {
         val reference=FirebaseDatabase.getInstance().getReference("Chats").child(chatId!!)
         reference.push().setValue(map)
             .addOnCompleteListener { messageSent->
+
+
+                sendNotification(message)
+
                 if(messageSent.isSuccessful) {
                     Toast.makeText(this,"Message Sent",Toast.LENGTH_SHORT).show()
                 }
@@ -118,6 +130,48 @@ class MessageActivity : AppCompatActivity() {
                     Toast.makeText(this,messageSent.exception.toString(),Toast.LENGTH_SHORT).show()
                 }
             }
+        verifyChatId()
 
+    }
+
+    private fun sendNotification(message: String) {
+        FirebaseDatabase.getInstance().getReference("Users").child(receiverId!!)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+
+                    val receiverData = snapshot.getValue(UserModel::class.java)
+
+                    val notificationData =
+                        PushNotification(
+
+                            NotificationData("New Message",message),
+                            receiverData!!.fcmToken!!
+
+                        )
+                    Log.d("msg",notificationData::class.java.toString())
+                    ApiUtilities.api.sendNotification(notificationData).enqueue(object : Callback<PushNotification>{
+                        override fun onResponse(
+                            call: Call<PushNotification>,
+                            response: Response<PushNotification>
+                        ) {
+                            if(response.isSuccessful){
+                                Toast.makeText(this@MessageActivity,"Notification Sent", Toast.LENGTH_SHORT).show()
+                            }
+                            else
+                                Toast.makeText(this@MessageActivity,response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onFailure(call: Call<PushNotification>, t: Throwable) {
+                            Toast.makeText(this@MessageActivity,"Something went wrong", Toast.LENGTH_SHORT).show()
+                        }
+
+                    })
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MessageActivity,error.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
