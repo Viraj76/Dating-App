@@ -47,7 +47,6 @@ class RegisterActivity : AppCompatActivity() {
         val userEmail = binding.userEmail.text.toString()
         val userCity = binding.userCity.text.toString()
         val checkBox = binding.checkBoxTermCondition.isChecked
-
         if(userName.isEmpty() || userEmail.isEmpty() || userCity.isEmpty() || imageUri == null) Toast.makeText(this,"Enter all fields please",Toast.LENGTH_SHORT).show()
         else if(!checkBox) Toast.makeText(this,"Please accept term and condition",Toast.LENGTH_SHORT).show()
         else uploadImage()
@@ -56,11 +55,9 @@ class RegisterActivity : AppCompatActivity() {
     private fun uploadImage() {
         Config.showDialog(this)
         val currentUserUid  = FirebaseAuth.getInstance().currentUser?.uid.toString()
-
         val storageReference=FirebaseStorage.getInstance().getReference("Profile")
             .child(currentUserUid)
             .child("Profile.jpg")
-
         storageReference.putFile(imageUri!!)
             .addOnSuccessListener {
                 storageReference.downloadUrl
@@ -80,8 +77,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun storeData(imageUrl: Uri?) {
-
-
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->     //first generating the token and store it to the respective user database
             if (!task.isSuccessful) {
                 return@OnCompleteListener
@@ -95,8 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                 city = binding.userCity.text.toString(),
                 image = imageUrl.toString(),
                 number = FirebaseAuth.getInstance().currentUser?.phoneNumber,
-                fcmToken =  token
-            )
+                fcmToken =  token)
 
             FirebaseDatabase.getInstance().getReference("Users")
                 .child(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!)

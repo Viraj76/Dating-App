@@ -44,7 +44,6 @@ class ChatFragmentAdapter(val context: Context):RecyclerView.Adapter<ChatFragmen
         FirebaseDatabase.getInstance().getReference("Users").child(receiverNumber)
             .addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-
                     if(snapshot.exists()){
                         val receiverData = snapshot.getValue(UserModel::class.java)
                         holder.binding.apply {

@@ -12,11 +12,13 @@ import com.example.datingapp.model.UserModel
 import com.example.datingapp.notification.NotificationData
 import com.example.datingapp.notification.PushNotification
 import com.example.datingapp.notification.api.ApiUtilities
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -104,7 +106,6 @@ class MessageActivity : AppCompatActivity() {
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(this@MessageActivity, error.message, Toast.LENGTH_SHORT).show()
                 }
-
             })
     }
 
@@ -116,13 +117,22 @@ class MessageActivity : AppCompatActivity() {
         map["senderId"] = senderId!!
         map["currentDate"] = currentDate
         map["currentTime"] = currentTime
+
         val reference=FirebaseDatabase.getInstance().getReference("Chats").child(chatId!!)
         reference.push().setValue(map)
             .addOnCompleteListener { messageSent->
-
-
+                FirebaseDatabase.getInstance().getReference("Users").child(senderId!!)
+                    .addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if(snapshot.exists()){
+                                val userData = snapshot.getValue(UserModel::class.java)
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })
                 sendNotification(message)
-
                 if(messageSent.isSuccessful) {
                     Toast.makeText(this,"Message Sent",Toast.LENGTH_SHORT).show()
                 }
@@ -131,7 +141,6 @@ class MessageActivity : AppCompatActivity() {
                 }
             }
         verifyChatId()
-
     }
 
     private fun sendNotification(message: String) {
@@ -139,17 +148,8 @@ class MessageActivity : AppCompatActivity() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
-
                     val receiverData = snapshot.getValue(UserModel::class.java)
-
-                    val notificationData =
-                        PushNotification(
-
-                            NotificationData("New Message",message),
-                            receiverData!!.fcmToken!!
-
-                        )
-                    Log.d("msg",notificationData::class.java.toString())
+                    val notificationData = PushNotification(NotificationData("New Message",message), receiverData!!.fcmToken!!)
                     ApiUtilities.api.sendNotification(notificationData).enqueue(object : Callback<PushNotification>{
                         override fun onResponse(
                             call: Call<PushNotification>,

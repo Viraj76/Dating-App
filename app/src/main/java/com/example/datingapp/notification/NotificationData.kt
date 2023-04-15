@@ -1,7 +1,7 @@
 package com.example.datingapp.notification
 
 data class NotificationData(
-    val title : String= "New Message",
+    val title : String,
     val message : String
 
 )

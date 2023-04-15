@@ -26,8 +26,6 @@ class DatingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDatingBinding.inflate(layoutInflater)
-
-        userDetail = ArrayList()
         prepareRecyclerViewForDatingAdapter()
         getUserData()
         return binding.root
@@ -42,22 +40,21 @@ class DatingFragment : Fragment() {
     }
 
 
-companion object{
-     var userDetail : ArrayList<UserModel>?=null
-}
+
     private fun getUserData() {
         Config.showDialog(requireContext())
         FirebaseDatabase.getInstance().getReference("Users")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    val userDetail = ArrayList<UserModel>()
                     for(userDetails in snapshot.children){
                         val currentUser = FirebaseAuth.getInstance().currentUser?.phoneNumber
                         val userData = userDetails.getValue(UserModel::class.java)
                         if(currentUser!=userData?.number)
-                            userDetail?.add(userData!!)
+                            userDetail.add(userData!!)
 
                     }
-                    datingAdapter.setUserDetail(userDetail!!)
+                    datingAdapter.setUserDetail(userDetail)
                     Config.hideDialog()
                 }
                 override fun onCancelled(error: DatabaseError) {

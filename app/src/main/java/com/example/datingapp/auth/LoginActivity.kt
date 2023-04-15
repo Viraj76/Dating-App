@@ -1,8 +1,10 @@
 package com.example.datingapp.auth
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
@@ -10,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import com.example.datingapp.ui.activity.MainActivity
 import com.example.datingapp.R
 import com.example.datingapp.databinding.ActivityLoginBinding
+import com.example.datingapp.model.UserModel
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -19,6 +23,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -27,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var verificationId: String? = null
     private lateinit var progressDialog:AlertDialog
+    private lateinit var tokenSharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,11 +122,21 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun checkUser(userNumber: String) {
-
         FirebaseDatabase.getInstance().getReference("Users").child( "+91$userNumber")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){
+                        val userdata = snapshot.getValue(UserModel::class.java)
+                        tokenSharedPreferences = getSharedPreferences("NewToken", MODE_PRIVATE)
+                        val token = tokenSharedPreferences.getString("newToken","")
+                                if(userdata?.fcmToken!=token){
+                                    Log.d("afterif",userdata?.fcmToken!!)
+                                    FirebaseDatabase.getInstance().getReference("Users").child( "+91$userNumber")
+                                        .child("fcmToken").setValue(token)
+                                        .addOnSuccessListener {
+                                            Log.d("MyFirebaseMessagingService", "FCM token updated successfully")
+                                        }
+                                }
                         progressDialog.dismiss()
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
