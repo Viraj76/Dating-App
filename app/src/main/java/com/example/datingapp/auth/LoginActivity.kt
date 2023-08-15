@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var firebaseAuth = FirebaseAuth.getInstance()
     private var verificationId: String? = null
-    private lateinit var progressDialog:AlertDialog
+    private lateinit var progressDialog: AlertDialog
     private lateinit var tokenSharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 //        progressBarNumber.visibility = GONE
 
-        progressDialog = AlertDialog.Builder(this).setView(R.layout.progress_dialog).setCancelable(false).create()
+        progressDialog =
+            AlertDialog.Builder(this).setView(R.layout.progress_dialog).setCancelable(false)
+                .create()
 
         binding.apply {
             btnSendOtp.setOnClickListener {
@@ -74,15 +76,15 @@ class LoginActivity : AppCompatActivity() {
 //        progressBarNumber.visibility = VISIBLE
         progressDialog.show()
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            
+
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
 //                progressBarNumber.visibility = VISIBLE
                 signInWithPhoneAuthCredential(credential)
             }
-            
+
             override fun onVerificationFailed(e: FirebaseException) {
             }
-            
+
             override fun onCodeSent(
                 verificationId: String,
                 token: PhoneAuthProvider.ForceResendingToken
@@ -95,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
 //                progressBarNumber.visibility = GONE
             }
         }
-        
+
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber("+91$userNumber")       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
@@ -105,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
         PhoneAuthProvider.verifyPhoneNumber(options)
 
     }
-    
+
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -116,34 +118,31 @@ class LoginActivity : AppCompatActivity() {
 
                 } else {
                     progressDialog.dismiss()
-                    Toast.makeText(this,task.exception.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun checkUser(userNumber: String) {
-        FirebaseDatabase.getInstance().getReference("Users").child( "+91$userNumber")
-            .addValueEventListener(object : ValueEventListener{
+        FirebaseDatabase.getInstance().getReference("Users").child("+91$userNumber")
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         val userdata = snapshot.getValue(UserModel::class.java)
                         tokenSharedPreferences = getSharedPreferences("NewToken", MODE_PRIVATE)
-                        val token = tokenSharedPreferences.getString("newToken","")
-                                if(userdata?.fcmToken!=token){
-                                    Log.d("afterif",userdata?.fcmToken!!)
-                                    FirebaseDatabase.getInstance().getReference("Users").child( "+91$userNumber")
-                                        .child("fcmToken").setValue(token)
-                                        .addOnSuccessListener {
-                                            Log.d("MyFirebaseMessagingService", "FCM token updated successfully")
-                                        }
-                                }
+                        val token = tokenSharedPreferences.getString("newToken", "")
+                        if (userdata?.fcmToken != token) {
+                            Log.d("afterif", userdata?.fcmToken!!)
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                .child("+91$userNumber")
+                                .child("fcmToken").setValue(token)
+                        }
                         progressDialog.dismiss()
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
-                    }
-                    else{
+                    } else {
                         progressDialog.dismiss()
-                        startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                         finish()
                     }
 
@@ -151,7 +150,7 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     progressDialog.dismiss()
-                    Toast.makeText(this@LoginActivity,error.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
                 }
 
             })

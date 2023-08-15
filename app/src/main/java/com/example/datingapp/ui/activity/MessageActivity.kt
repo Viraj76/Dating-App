@@ -27,10 +27,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MessageActivity : AppCompatActivity() {
-
     private lateinit var binding:ActivityMessageBinding
     private lateinit var messageAdapter: MessageAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
@@ -121,17 +119,17 @@ class MessageActivity : AppCompatActivity() {
         val reference=FirebaseDatabase.getInstance().getReference("Chats").child(chatId!!)
         reference.push().setValue(map)
             .addOnCompleteListener { messageSent->
-                FirebaseDatabase.getInstance().getReference("Users").child(senderId!!)
-                    .addListenerForSingleValueEvent(object : ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            if(snapshot.exists()){
-                                val userData = snapshot.getValue(UserModel::class.java)
-                            }
-                        }
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
-                    })
+//                FirebaseDatabase.getInstance().getReference("Users").child(senderId!!)
+//                    .addListenerForSingleValueEvent(object : ValueEventListener{
+//                        override fun onDataChange(snapshot: DataSnapshot) {
+//                            if(snapshot.exists()){
+//                                val userData = snapshot.getValue(UserModel::class.java)
+//                            }
+//                        }
+//                        override fun onCancelled(error: DatabaseError) {
+//                            TODO("Not yet implemented")
+//                        }
+//                    })
                 sendNotification(message)
                 if(messageSent.isSuccessful) {
                     Toast.makeText(this,"Message Sent",Toast.LENGTH_SHORT).show()
@@ -147,26 +145,38 @@ class MessageActivity : AppCompatActivity() {
         FirebaseDatabase.getInstance().getReference("Users").child(receiverId!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val receiverData = snapshot.getValue(UserModel::class.java)
                 if(snapshot.exists()){
-                    val receiverData = snapshot.getValue(UserModel::class.java)
-                    val notificationData = PushNotification(NotificationData("New Message",message), receiverData!!.fcmToken!!)
-                    ApiUtilities.api.sendNotification(notificationData).enqueue(object : Callback<PushNotification>{
-                        override fun onResponse(
-                            call: Call<PushNotification>,
-                            response: Response<PushNotification>
-                        ) {
-                            if(response.isSuccessful){
-                                Toast.makeText(this@MessageActivity,"Notification Sent", Toast.LENGTH_SHORT).show()
+                    FirebaseDatabase.getInstance().getReference("Users").child(senderId!!)
+                        .addListenerForSingleValueEvent(object : ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val senderUser = snapshot.getValue(UserModel::class.java)
+                                val notificationData = PushNotification(NotificationData(senderUser?.name!!,message), receiverData!!.fcmToken!!)
+                                ApiUtilities.api.sendNotification(notificationData).enqueue(object : Callback<PushNotification>{
+                                    override fun onResponse(
+                                        call: Call<PushNotification>,
+                                        response: Response<PushNotification>
+                                    ) {
+                                        if(response.isSuccessful){
+                                            Toast.makeText(this@MessageActivity,"Notification Sent", Toast.LENGTH_SHORT).show()
+                                        }
+                                        else
+                                            Toast.makeText(this@MessageActivity,response.errorBody().toString(), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    override fun onFailure(call: Call<PushNotification>, t: Throwable) {
+                                        Toast.makeText(this@MessageActivity,"Something went wrong", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
                             }
-                            else
-                                Toast.makeText(this@MessageActivity,response.errorBody().toString(), Toast.LENGTH_SHORT).show()
-                        }
 
-                        override fun onFailure(call: Call<PushNotification>, t: Throwable) {
-                            Toast.makeText(this@MessageActivity,"Something went wrong", Toast.LENGTH_SHORT).show()
-                        }
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
 
-                    })
+                        })
+
                 }
             }
             override fun onCancelled(error: DatabaseError) {

@@ -52,7 +52,6 @@ class DatingFragment : Fragment() {
                         val userData = userDetails.getValue(UserModel::class.java)
                         if(currentUser!=userData?.number)
                             userDetail.add(userData!!)
-
                     }
                     datingAdapter.setUserDetail(userDetail)
                     Config.hideDialog()

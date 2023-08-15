@@ -6,14 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.datingapp.R
 import com.example.datingapp.ui.activity.MainActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -23,20 +18,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val channelId = "viraj"
 
     override fun onNewToken(token: String) {
-
         val tokenSharedPreferences = getSharedPreferences("NewToken", MODE_PRIVATE)
         tokenSharedPreferences.edit().apply {
             putString("newToken",token)
             apply()
         }
-//        Log.d("MyFirebaseMessagingService", "FCM token updated successfully")
-//        val currentUserPhoneNumber = FirebaseAuth.getInstance().currentUser?.phoneNumber
-//        FirebaseDatabase.getInstance().getReference("Users").child(currentUserPhoneNumber!!)
-//            .child("fcmToken").setValue(token)
-//            .addOnSuccessListener {
-//                Log.d("MyFirebaseMessagingService", "FCM token updated successfully")
-//            }
-
     }
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -56,9 +42,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .build()
         manager.notify(Random.nextInt(),notification)
     }
-
-
-
     private fun createNotificationChannel(manager : NotificationManager) {
         val channel = NotificationChannel(
             channelId, "virajchat",
@@ -68,5 +51,4 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         channel.enableLights(true)
         manager.createNotificationChannel(channel)
     }
-
 }
